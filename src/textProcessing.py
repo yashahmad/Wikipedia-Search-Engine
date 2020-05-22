@@ -149,3 +149,14 @@ def findInfoBoxTextCategory(data):
         category = create_word_to_freq_defaultdict(category)
 
         return info, bodyText, category
+
+def processTitle(data):
+    data = cleanup_string(data, already_lowercase=False)
+    return create_word_to_freq_defaultdict(data)
+
+def processText(data):
+    data = data.lower()
+    externalLinks = findExternalLinks(data)
+    data = data.replace("_"," ").replace(",","")
+    infoBox, bodyText, category = findInfoBoxTextCategory(data)
+    return bodyText, infoBox, category, externalLinks
