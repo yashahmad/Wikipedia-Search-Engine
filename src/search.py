@@ -148,7 +148,7 @@ def queryMultifield(queryWords, listOfFields, pathOfFolder, fVocabulary):
 
 def main():
     if len(sys.argv)!= 2:
-        print "Usage :: python wikiIndexer.py pathOfFolder"
+        print("Usage :: python wikiIndexer.py pathOfFolder")
         sys.exit(0)
 
     # Read the offsets
@@ -164,54 +164,53 @@ def main():
 
     while True:
         query = raw_input("Enter query:")
-	if len(query.strip()) < 1:
-	    sys.exit(0)
+        if len(query.strip()) < 1:
+            sys.exit(0)
         fVocabulary = open(sys.argv[1] + '/vocabularyList.txt', 'r')
-	start_time = time.time()
+        start_time = time.time()
 
         queryWords = query.strip().split(' ')
         listOfFields, temp = [], []
         for word in queryWords:
             if re.search(r'[t|b|c|e|i]{1,}:', word):
                 _fields = list(word.split(':')[0])
-		_words = [word.split(':')[1]] * len(_fields)
+                _words = [word.split(':')[1]] * len(_fields)
             else:
-		_fields = ['t', 'b', 'c', 'e', 'i']
-		_words = [word] * len(_fields)
+                _fields = ['t', 'b', 'c', 'e', 'i']
+                _words = [word] * len(_fields)
 
             listOfFields.extend(_fields)
             temp.extend(cleanup_string(" ".join(_words)))
+    print("Fields:", listOfFields)
+    print("Words:", temp)
+    print("="*40)
+    results, documentFrequency = queryMultifield(temp, listOfFields, sys.argv[1], fVocabulary)
 
-	print "Fields:", listOfFields
-	print "Words:", temp
-        print "="*40
-        results, documentFrequency = queryMultifield(temp, listOfFields, sys.argv[1], fVocabulary)
+    with open(sys.argv[1]+'/numberOfFiles.txt','r') as f:
+        numberOfFiles = int(f.read().strip())
 
-        with open(sys.argv[1]+'/numberOfFiles.txt','r') as f:
-            numberOfFiles = int(f.read().strip())
-
-        results = ranking(results, documentFrequency, numberOfFiles)
-	end_time = time.time()
-        if len(results)>0:
-            top_n_docs = sorted(results, key=results.get, reverse=True)[:TOP_N_RESULTS]
-            #pdb.set_trace()
+    results = ranking(results, documentFrequency, numberOfFiles)
+    end_time = time.time()
+    if len(results)>0:
+        top_n_docs = sorted(results, key=results.get, reverse=True)[:TOP_N_RESULTS]
+        #pdb.set_trace()
 
 	    # Get titles for Top N results only
-            titleFile = open(sys.argv[1] + '/title.txt','rb')
-            dict_Title = {}
-            for docid in top_n_docs:                                                                  #find top ten links
-                title, _ = findFileNumber_forTitleSearch(0, len(titleOffset), titleOffset, sys.argv[1], docid, titleFile)
-                if not len(title):
-                    print "Title Not Found:", docid, titleFile, len(titleOffset)
-                dict_Title[docid] = ' '.join(title)
+        titleFile = open(sys.argv[1] + '/title.txt','rb')
+        dict_Title = {}
+        for docid in top_n_docs:                                                                  #find top ten links
+            title, _ = findFileNumber_forTitleSearch(0, len(titleOffset), titleOffset, sys.argv[1], docid, titleFile)
+            if not len(title):
+                print("Title Not Found:", docid, titleFile, len(titleOffset))
+            dict_Title[docid] = ' '.join(title)
 
-            # print results
-            for rank, docid in enumerate(top_n_docs):
-                print "\t",rank+1, ":", dict_Title[docid], "(Score:", results[docid], ")"
-            print "="*40
-	    print "QueryTime:", end_time - start_time, "seconds"
-        else:
-            print "Phrase Not Found"
+        # print results
+        for rank, docid in enumerate(top_n_docs):
+            print("\t",rank+1, ":", dict_Title[docid], "(Score:", results[docid], ")")
+        print("="*40)
+        print("QueryTime:", end_time - start_time, "seconds")
+    else:
+        print("Phrase Not Found")
 
 
 if __name__ == "__main__":
