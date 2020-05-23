@@ -4,16 +4,17 @@ from collections import defaultdict
 from Stemmer import Stemmer
 from nltk.stem import WordNetLemmatizer
 
+
 from nltk.corpus import stopwords as nltk_stopwords
 from config import *
 import string
 
-STOPWORDS = Set(nltk_stopwords.words('english'))
-URL_STOP_WORDS = Set(["http","https","www","ftp","com","net","org","archives","pdf","html","png","txt","redirect"])
+STOPWORDS = set(nltk_stopwords.words('english'))
+URL_STOP_WORDS = set(["http","https","www","ftp","com","net","org","archives","pdf","html","png","txt","redirect"])
 STEMMER = Stemmer('english')
 LEMMATIZER = WordNetLemmatizer()
-EXTENDED_PUNCTUATIONS = Set(list(string.punctuation)) + ['\n','\t',' '])
-INT_DIGITS = Set(["0","1","2","3","4","5","6","7","8","9"])
+EXTENDED_PUNCTUATIONS = set(list(string.punctuation) + ['\n','\t',' '])
+INT_DIGITS = set(["0","1","2","3","4","5","6","7","8","9"])
 
 MAX_WORD_LEN = 10
 MIN_WORD_LEN = 3
@@ -76,7 +77,7 @@ def create_word_to_freq_defaultdict(words):
 
 def cleanup_list(list_of_words, already_lowercase=False):
     temp = []
-    if not in already_lowercase:
+    if not already_lowercase:
         list_of_words = [s.lower() for s in list_of_words]
 
     temp = removeNumbersAndPunctuations(list_of_words)
