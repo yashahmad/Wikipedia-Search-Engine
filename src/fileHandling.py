@@ -51,7 +51,7 @@ def writeSingle(field, data, offset, countFinalFile, pathOfFolder):
 
 def get_appropriate_score_type(score):
     if SCORE_TYPE_TYPE == int:
-	return SCORE_TYPE_TYPE(float(score))
+	    return SCORE_TYPE_TYPE(float(score))
     if SCORE_TYPE_TYPE == float:
         return SCORE_TYPE_TYPE(score)
 
@@ -70,27 +70,27 @@ def writeFinalIndex(data, countFinalFile, pathOfFolder,offsetSize):
         temp=[]
         flag=0
         for i in range(0, len(listOfDoc), 6):
-           word = listOfDoc
-           docid = word[i]
-           try:
-               if word[i+1] != min_score_value:
-                   title[key][docid]=get_appropriate_score_type(word[i+1])
-                   flag=1
-               if word[i+2] != min_score_value:
-                   text[key][docid]=get_appropriate_score_type(word[i+2])
-                   flag=1
-               if word[i+3] != min_score_value:
-                   info[key][docid]=get_appropriate_score_type(word[i+3])
-                   flag=1
-               if word[i+4] != min_score_value:
-                   category[key][docid]=get_appropriate_score_type(word[i+4])
-                   flag=1
-               if word[i+5] != min_score_value:
-                   externalLink[key][docid]=get_appropriate_score_type(word[i+5])
-                   flag=1
-           except Exception as e:
-	       print(e)
-               pdb.set_trace()
+            word = listOfDoc
+            docid = word[i]
+            try:
+                if word[i+1] != min_score_value:
+                    title[key][docid]=get_appropriate_score_type(word[i+1])
+                    flag=1
+                if word[i+2] != min_score_value:
+                    text[key][docid]=get_appropriate_score_type(word[i+2])
+                    flag=1
+                if word[i+3] != min_score_value:
+                    info[key][docid]=get_appropriate_score_type(word[i+3])
+                    flag=1
+                if word[i+4] != min_score_value:
+                    category[key][docid]=get_appropriate_score_type(word[i+4])
+                    flag=1
+                if word[i+5] != min_score_value:
+                    externalLink[key][docid]=get_appropriate_score_type(word[i+5])
+                    flag=1
+            except Exception as e:
+	            print(e)
+                # pdb.set_trace()
         if flag==1:
             string = key+' '+str(countFinalFile)+' '+str(len(listOfDoc)/6)
             uniqueWords.append(string)
@@ -246,18 +246,18 @@ def mergeFiles(pathOfFolder, countFile):
                     if topOfFile[i] == '':
                             flag[i] = 0
                             indexFile[i].close()
-			    print("\tRemoved:", str(i))
+                            print("\tRemoved:", str(i))
                             os.remove(pathOfFolder + '/index' + str(i) + ('.txt.bz2' if COMPRESS_INDEX else '.txt'))
                     else:
                         listOfWords[i] = topOfFile[i].split()
                         if listOfWords[i][0] not in heap:
                             heapq.heappush(heap, listOfWords[i][0])
 
-	if not count%5000:
-	    print("Done Words:", count)
-        if count > 0 and count%20000==0:
-            oldCountFile = countFinalFile
-            countFinalFile, offsetSize = writeFinalIndex(data, countFinalFile, pathOfFolder, offsetSize)
-            if oldCountFile !=  countFinalFile:
-                data = defaultdict(list)
+        if not count%5000:
+            print("Done Words:", count)
+            if count > 0 and count%20000==0:
+                oldCountFile = countFinalFile
+                countFinalFile, offsetSize = writeFinalIndex(data, countFinalFile, pathOfFolder, offsetSize)
+                if oldCountFile !=  countFinalFile:
+                    data = defaultdict(list)
     countFinalFile, offsetSize = writeFinalIndex(data, countFinalFile, pathOfFolder, offsetSize)
