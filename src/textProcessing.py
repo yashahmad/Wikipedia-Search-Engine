@@ -9,7 +9,7 @@ from nltk.corpus import stopwords as nltk_stopwords
 from config import *
 import string
 
-STOPWORDS = set(nltk_stopwords.words('english'))
+# STOPWORDS = set(nltk_stopwords.words('english'))
 URL_STOP_WORDS = set(["http","https","www","ftp","com","net","org","archives","pdf","html","png","txt","redirect"])
 STEMMER = Stemmer('english')
 LEMMATIZER = WordNetLemmatizer()
