@@ -60,7 +60,7 @@ def writeFinalIndex(data, countFinalFile, pathOfFolder,offsetSize):
         Write index after merging
     """
     title, text, info, category, externalLink = defaultdict(dict), defaultdict(dict), defaultdict(dict), defaultdict(dict), defaultdict(dict)
-    print "Merging file:", countFinalFile
+    print("Merging file:", countFinalFile)
     uniqueWords, offset = [], []
 
     min_score_value = str(SCORE_TYPE_TYPE(0))
@@ -89,7 +89,7 @@ def writeFinalIndex(data, countFinalFile, pathOfFolder,offsetSize):
                    externalLink[key][docid]=get_appropriate_score_type(word[i+5])
                    flag=1
            except Exception as e:
-	       print e
+	       print(e)
                pdb.set_trace()
         if flag==1:
             string = key+' '+str(countFinalFile)+' '+str(len(listOfDoc)/6)
@@ -224,7 +224,7 @@ def mergeFiles(pathOfFolder, countFile):
     data = defaultdict(list)
     heap = []
     countFinalFile, offsetSize = 0, 0
-    for i in xrange(countFile):
+    for i in range(countFile):
         fileName = pathOfFolder + '/index' + str(i) + ('.txt.bz2' if COMPRESS_INDEX else '.txt')
         indexFile[i] = bz2.BZ2File(fileName, 'rb') if COMPRESS_INDEX else open(fileName, 'rb')
         flag[i] = 1
@@ -238,7 +238,7 @@ def mergeFiles(pathOfFolder, countFile):
         temp = heapq.heappop(heap)
         count += 1
 	#print "."
-        for i in xrange(countFile):
+        for i in range(countFile):
             if flag[i]:
                 if listOfWords[i][0] == temp:
                     data[temp].extend(listOfWords[i][1:])
@@ -246,7 +246,7 @@ def mergeFiles(pathOfFolder, countFile):
                     if topOfFile[i] == '':
                             flag[i] = 0
                             indexFile[i].close()
-			    print "\tRemoved:", str(i)
+			    print("\tRemoved:", str(i))
                             os.remove(pathOfFolder + '/index' + str(i) + ('.txt.bz2' if COMPRESS_INDEX else '.txt'))
                     else:
                         listOfWords[i] = topOfFile[i].split()
@@ -254,7 +254,7 @@ def mergeFiles(pathOfFolder, countFile):
                             heapq.heappush(heap, listOfWords[i][0])
 
 	if not count%5000:
-	    print "Done Words:", count
+	    print("Done Words:", count)
         if count > 0 and count%20000==0:
             oldCountFile = countFinalFile
             countFinalFile, offsetSize = writeFinalIndex(data, countFinalFile, pathOfFolder, offsetSize)
