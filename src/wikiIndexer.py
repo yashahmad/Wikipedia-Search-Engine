@@ -80,35 +80,35 @@ class WikiHandler(xml.sax.handler.ContentHandler):
         elif name == "page":
             WikiHandler.flag = 0
     
-    def main():
-        global offset, countFile, OUTPUT_FOLDER
-        if len(sys.argv) != 3:
-            print("Usage:: python wikihandler.py sample.xml ./output")
-            sys.exit(0)
-        OUTPUT_FOLDER = sys.argv[2]
+def main():
+    global offset, countFile, OUTPUT_FOLDER
+    if len(sys.argv) != 3:
+        print("Usage:: python wikihandler.py sample.xml ./output")
+        sys.exit(0)
+    OUTPUT_FOLDER = sys.argv[2]
 
-        parser = xml.sax.make_parser()
-        handler = WikiHandler()
-        parser.setContentHandler(handler)
-        parser.parse(sys.argv[1])
-        with open(OUTPUT_FOLDER + '/numberOfFiles.txt','wb') as f:
-            f.write(str(count))
-        
-        offset = writeIntoFile(OUTPUT_FOLDER, index, dict_Id, countFile, offset)
-        countFile += 1
-        mergeFiles(OUTPUT_FOLDER, countFile)
+    parser = xml.sax.make_parser()
+    handler = WikiHandler()
+    parser.setContentHandler(handler)
+    parser.parse(sys.argv[1])
+    with open(OUTPUT_FOLDER + '/numberOfFiles.txt','wb') as f:
+        f.write(str(count))
+    
+    offset = writeIntoFile(OUTPUT_FOLDER, index, dict_Id, countFile, offset)
+    countFile += 1
+    mergeFiles(OUTPUT_FOLDER, countFile)
 
-        titleOffset = []
-        with open(OUTPUT_FOLDER + './title.txt','rb') as f:
-            titleOffset.append('0')
+    titleOffset = []
+    with open(OUTPUT_FOLDER + './title.txt','rb') as f:
+        titleOffset.append('0')
+        for line in f:
+            titleOffset.append(str(int(titleOffset[-1]) + len(line)))
             for line in f:
                 titleOffset.append(str(int(titleOffset[-1]) + len(line)))
-                for line in f:
-                    titleOffset.append(str(int(titleOffset[-1]) + len(line)))
-                titleOffset = titleOffset[:-1]
-            
-            with open(OUTPUT_FOLDER + './titleoffset.txt','wb') as f:
-                f.write('\n'.join(titleOffset))
+            titleOffset = titleOffset[:-1]
+        
+        with open(OUTPUT_FOLDER + './titleoffset.txt','wb') as f:
+            f.write('\n'.join(titleOffset))
 
 if __name__ == "__main__":
     start = timeit.default_timer()
